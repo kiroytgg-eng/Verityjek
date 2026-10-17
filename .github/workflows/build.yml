@@ -1,0 +1,21 @@
+name: build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -q verity-mod-source*.zip
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.8
+      - run: gradle build --no-daemon
+        working-directory: verity-mod
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verity-mod
+          path: verity-mod/build/libs/verity-*.jar
